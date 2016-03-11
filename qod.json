@@ -1,0 +1,23 @@
+{
+    "success": {
+        "total": 1
+    },
+    "contents": {
+        "quotes": [
+            {
+                "quote": "Positive anything is better than negative thinking.",
+                "length": "51",
+                "author": "Elbert Hubbard",
+                "tags": [
+                    "inspire",
+                    "positive-thinking"
+                ],
+                "category": "inspire",
+                "date": "2016-01-16",
+                "title": "Inspiring Quote of the day",
+                "background": "https://theysaidso.com/img/bgs/man_on_the_mountain.jpg",
+                "id": "g3j5nQxVRTka7Sw3khgdRQeF"
+            }
+        ]
+    }
+}

@@ -1,0 +1,12 @@
+[package]
+authors = ["J/A <archer884@gmail.com>"]
+name = "quoters"
+version = "0.1.0"
+
+[dependencies]
+hyper = "0.7.2"
+regex = "0.1.55"
+serde = "0.7.0"
+serde_json = "0.7.0"
+serde_macros = "0.7.0"
+time = "0.1.34"
