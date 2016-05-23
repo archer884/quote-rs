@@ -1,9 +1,7 @@
 use std::collections::LinkedList;
 
 use hyper::Client;
-
-use super::{ApiResult, CategoryResponse, Query, QuoteResponse, QuoteError, Quotes};
-use super::{read_categories_result, read_quote_result};
+use super::{ApiResult, CategoryResponse, Query, QuoteError, Quotes};
 
 pub struct PublicQuoteService {
     quote_log: LinkedList<ApiResult<QuoteResponse>>,
@@ -16,7 +14,7 @@ impl Quotes for PublicQuoteService {
             "http://quotes.rest/qod.json"
         ).send() {
             Err(_) => unimplemented!(), // no idea what to do in this case
-            Ok(mut res) => read_quote_result(&mut res),
+            Ok(mut res) => super::read_quote_result(&mut res),
         }
     }
 
@@ -25,7 +23,7 @@ impl Quotes for PublicQuoteService {
             "http://quotes.rest/qod/categories.json"
         ).send() {
             Err(_) => unimplemented!(), // no idea what to do in this case
-            Ok(mut res) => read_categories_result(&mut res),
+            Ok(mut res) => super::read_categories_result(&mut res),
         }
     }
 
@@ -34,7 +32,7 @@ impl Quotes for PublicQuoteService {
             &format!("http://quotes.rest/qod.json?category={}", category)
         ).send() {
             Err(_) => unimplemented!(),
-            Ok(mut res) => read_quote_result(&mut res),
+            Ok(mut res) => super::read_quote_result(&mut res),
         }
     }
 

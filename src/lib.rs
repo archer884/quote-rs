@@ -1,4 +1,4 @@
-#![feature(custom_derive, plugin)]
+#![feature(custom_derive, plugin, question_mark)]
 #![plugin(serde_macros)]
 
 extern crate hyper;
@@ -8,17 +8,20 @@ extern crate serde_json;
 
 use std::io::Read;
 use std::fmt;
-
 use hyper::Client;
 use hyper::client::response::Response as HyperResponse;
 use hyper::header::{Authorization, Basic, ContentType};
 use regex::Regex;
 
-mod public;
-mod quote;
+mod model;
 
-pub use public::PublicQuoteService;
-pub use quote::QuoteResponse;
+use model::quote::QuoteResponse;
+
+// mod public;
+// mod quote;
+
+// pub use public::PublicQuoteService;
+// pub use quote::Quote;
 
 pub type ApiResult<T> = Result<T, QuoteError>;
 
@@ -84,7 +87,7 @@ fn read_quote_result(res: &mut HyperResponse) -> ApiResult<QuoteResponse> {
     let mut buf = String::new();
     res.read_to_string(&mut buf);
 
-    extract_quotes(res);
+    unimplemented!()
 }
 
 fn read_categories_result(res: &mut HyperResponse) -> ApiResult<CategoryResponse> {
@@ -106,44 +109,44 @@ fn build_query(query: &Query) -> String {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::{build_query, Query, QuoteResponse};
-    use serde_json as json;
+// #[cfg(test)]
+// mod tests {
+//     use super::{build_query, Query, QuoteResponse};
+//     use serde_json as json;
 
-    #[test]
-    fn build_query_produces_expected_results_for_min_and_max() {
-        let query = Query::new().with_min(20);
-        assert_eq!(
-            "http://quotes.rest/quote.json?minlength=20",
-            &build_query(&query)
-        );
+//     #[test]
+//     fn build_query_produces_expected_results_for_min_and_max() {
+//         let query = Query::new().with_min(20);
+//         assert_eq!(
+//             "http://quotes.rest/quote.json?minlength=20",
+//             &build_query(&query)
+//         );
 
-        let query = Query::new().with_max(20);
-        assert_eq!(
-            "http://quotes.rest/quote.json?maxlength=20",
-            &build_query(&query)
-        );
+//         let query = Query::new().with_max(20);
+//         assert_eq!(
+//             "http://quotes.rest/quote.json?maxlength=20",
+//             &build_query(&query)
+//         );
 
-        let query = Query::new().with_min(20).with_max(20);
-        assert_eq!(
-            "http://quotes.rest/quote.json?minlength=20&maxlength=20",
-            &build_query(&query)
-        );
-    }
+//         let query = Query::new().with_min(20).with_max(20);
+//         assert_eq!(
+//             "http://quotes.rest/quote.json?minlength=20&maxlength=20",
+//             &build_query(&query)
+//         );
+//     }
 
-    #[test]
-    fn build_query_produces_expected_results_for_category() {
-        let query = Query::new().with_category("testing");
-        assert_eq!(
-            "http://quotes.rest/quote.json?category=testing",
-            &build_query(&query)
-        );
+//     #[test]
+//     fn build_query_produces_expected_results_for_category() {
+//         let query = Query::new().with_category("testing");
+//         assert_eq!(
+//             "http://quotes.rest/quote.json?category=testing",
+//             &build_query(&query)
+//         );
 
-        let query = Query::new().with_category("testing").with_min(20).with_max(20);
-        assert_eq!(
-            "http://quotes.rest/quote.json?minlength=20&maxlength=20&category=testing",
-            &build_query(&query)
-        );
-    }
-}
+//         let query = Query::new().with_category("testing").with_min(20).with_max(20);
+//         assert_eq!(
+//             "http://quotes.rest/quote.json?minlength=20&maxlength=20&category=testing",
+//             &build_query(&query)
+//         );
+//     }
+// }
