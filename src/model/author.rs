@@ -1,6 +1,17 @@
-#[derive(Deserialize)]
-struct Authors {
+use model::{AuthorResponse, Content};
+use service::{Error, Result};
+
+#[derive(Debug, Deserialize)]
+pub struct AuthorPayload {
     authors: Vec<String>
+}
+
+pub type Authors = Vec<String>;
+
+impl Content<Authors> for AuthorResponse {
+    fn content(self) -> Result<Authors> {
+        self.contents.map(|content| content.authors).ok_or(Error::Empty)
+    }
 }
 
 #[cfg(test)]

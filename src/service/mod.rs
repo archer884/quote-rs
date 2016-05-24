@@ -1,27 +1,65 @@
-use model::category::Categories;
-use model::quote::{Quote, Quotes};
+use std::error;
+use std::fmt;
+use std::io;
+use hyper;
+use serde_json as json;
 
-pub type Result<T> = ::std::result::Result<T, ServiceError>;
+mod query;
+mod response;
+mod service;
 
-pub enum ServiceError {}
+pub use service::query::Query;
+pub use service::service::Service;
 
-// API Secret: X-TheySaidSo-Api-Secret
-pub trait QuoteService {
-    // GET: http://quotes.rest/qod.json
-    fn qod(&mut self) -> Result<Quote>;
+pub type Result<T> = ::std::result::Result<T, Error>;
 
-    // GET: http://quotes.rest/qod/categories.json
-    fn qod_categories(&mut self) -> Result<Categories>;
+#[derive(Debug)]
+pub enum Error {
+    Empty,
+    IO(Box<error::Error + Send>),
+    Json(Box<error::Error + Send>),
+    MethodUnavailable,
+    NetworkError(Box<error::Error + Send>),
+}
 
-    // GET: http://quotes.rest/qod/qod.json?category=testing
-    fn qod_for_category(&mut self, category: &str) -> Result<Quote>;
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Error::Empty => write!(f, "Empty"),
+            Error::IO(ref e) => write!(f, "IO error: {}", e),
+            Error::Json(ref e) => write!(f, "Json error: {}", e),
+            Error::MethodUnavailable => write!(f, "Method unavailable"),
+            Error::NetworkError(ref e) => write!(f, "Network error: {}", e),
+        }
+    }
+}
 
-    // GET: http://quotes.rest/quote.json
-    fn random(&mut self) -> Result<Quote>;
+impl error::Error for Error {
+    fn description(&self) -> &str {
+        match *self {
+            Error::Empty => "Empty response",
+            Error::IO(_) => "IO failure",
+            Error::Json(_) => "Json failure",
+            Error::MethodUnavailable => "Method unavailable",
+            Error::NetworkError(_) => "Network failure"
+        }
+    }
+}
 
-    // GET: http://quotes.rest/quote.json?minlength=100&maxlength=300
-    fn query(&mut self, Query) -> Result<Quotes>;
+impl From<hyper::Error> for Error {
+    fn from(error: hyper::Error) -> Error {
+        Error::NetworkError(box error)
+    }
+}
 
-    // GET: http://quotes.rest/quote/categories.json
-    fn categories(&mut self) -> Result<Categories>;
+impl From<io::Error> for Error {
+    fn from(error: io::Error) -> Error {
+        Error::IO(box error)
+    }
+}
+
+impl From<json::Error> for Error {
+    fn from(error: json::Error) -> Error {
+        Error::Json(box error)
+    }
 }

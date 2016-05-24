@@ -1,0 +1,12 @@
+{
+    "failure": {
+        "total": 1
+    },
+    "contents": {
+        "message": "Failed to get an image"
+    },
+    "copyright": {
+        "year": "2013-15",
+        "url": "http://theysaidso.com"
+    }
+}

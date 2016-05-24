@@ -1,13 +1,21 @@
-use std::error::Error;
+use std::result;
+use model::{QuoteResponse, Content};
 use serde::de::Error as SerdeError;
 use serde::{Deserialize, Deserializer};
+use service::{Error, Result};
 
-#[derive(Deserialize)]
-struct QuotePayload {
-    quotes: Vec<Quote>,
+#[derive(Debug, Deserialize)]
+pub struct QuotePayload {
+    pub quotes: Vec<Quote>,
 }
 
 pub type Quotes = Vec<Quote>;
+
+impl Content<Quote> for QuoteResponse {
+    fn content(self) -> Result<Quote> {
+        self.contents.and_then(|mut content| content.quotes.pop()).ok_or(Error::Empty)
+    }
+}
 
 #[derive(Debug)]
 pub struct Quote {
@@ -23,7 +31,9 @@ pub struct Quote {
 }
 
 impl Deserialize for Quote {
-    fn deserialize<D: Deserializer>(d: &mut D) -> Result<Self, D::Error> {
+    fn deserialize<D: Deserializer>(d: &mut D) -> result::Result<Self, D::Error> {
+        use std::error::Error;
+        
         #[derive(Deserialize)]
         struct Template {
             pub quote: String,

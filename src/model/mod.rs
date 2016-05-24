@@ -1,31 +1,47 @@
 use serde::Deserialize;
+use service::Result;
 
-pub mod author;
-pub mod category;
-pub mod quote;
+mod author;
+mod category;
+mod image;
+mod quote;
 
-#[derive(Deserialize)]
+pub use model::author::{Authors, AuthorPayload};
+pub use model::category::{Categories, CategoryPayload};
+pub use model::image::{Image, ImagePayload};
+pub use model::quote::{Quote, Quotes, QuotePayload};
+
+pub type AuthorResponse = ApiResponse<AuthorPayload>;
+pub type CategoryResponse = ApiResponse<CategoryPayload>;
+pub type ImageResponse = ApiResponse<ImagePayload>;
+pub type QuoteResponse = ApiResponse<QuotePayload>;
+
+#[derive(Debug, Deserialize)]
 pub struct ApiSuccess {
-    total: i32,
-    range: Option<PageRange>,
+    pub total: i32,
+    pub range: Option<PageRange>,
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct PageRange {
-    start: i32,
-    end: i32,
+    pub start: i32,
+    pub end: i32,
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct ApiError {
-    code: i32,
-    message: String,
+    pub code: i32,
+    pub message: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct ApiResponse<T: Deserialize> {
-    success: Option<ApiSuccess>,
-    error: Option<ApiError>,
-    reason: Option<String>,
-    content: Option<T>,
+    pub success: Option<ApiSuccess>,
+    pub error: Option<ApiError>,
+    pub reason: Option<String>,
+    pub contents: Option<T>,
+}
+
+pub trait Content<T> {
+    fn content(self) -> Result<T>;
 }

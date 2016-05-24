@@ -11,7 +11,3 @@ serde = "0.7.5"
 serde_json = "0.7.0"
 serde_macros = "0.7.5"
 chrono = "0.2.22"
-
-[features]
-default = ["ssl"]
-ssl = ["hyper/ssl"]

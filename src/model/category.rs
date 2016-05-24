@@ -1,9 +1,18 @@
-#[derive(Deserialize)]
-struct CategoryPayload {
-    categories: Vec<String>
+use model::{CategoryResponse, Content};
+use service::{Error, Result};
+
+#[derive(Debug, Deserialize)]
+pub struct CategoryPayload {
+    pub categories: Vec<String>
 }
 
 pub type Categories = Vec<String>;
+
+impl Content<Categories> for CategoryResponse {
+    fn content(self) -> Result<Categories> {
+        self.contents.map(|content| content.categories).ok_or(Error::Empty)
+    }
+}
 
 #[cfg(test)]
 mod tests {
