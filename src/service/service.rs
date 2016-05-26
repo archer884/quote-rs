@@ -140,6 +140,7 @@ impl Service {
 
 fn apply_query<T: Into<String>>(uri: T, query: &Query) -> String {
     let mut uri = uri.into();
+    let query = query.to_string();
     uri.reserve_exact(query.len() + 1);
 
     if !uri.contains("?") {
