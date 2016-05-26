@@ -53,8 +53,8 @@ impl Default for Query {
 
 impl ToString for Query {
     fn to_string(&self) -> String {
-        let mut buf = Vec::new();
-        self.append_to_buffer(&mut buf).ok();
+        let mut buf = String::new();
+        self.append_to_buffer(&mut buf);
         buf
     }
 }
