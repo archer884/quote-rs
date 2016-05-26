@@ -143,7 +143,7 @@ fn apply_query<T: Into<String>>(uri: T, query: &Query) -> String {
     let query = query.to_string();
     uri.reserve_exact(query.len() + 1);
 
-    if !uri.contains("?") {
+    if !uri.contains('?') {
         uri.push('?');
     }
 
