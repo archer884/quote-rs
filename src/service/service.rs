@@ -15,13 +15,13 @@ impl Service {
     pub fn new() -> Service {
         Service { key: None }
     }
-    
+
     pub fn with_key<T: Into<String>>(key: T) -> Service {
         Service {
             key: Some(key.into())
         }
     }
-    
+
     fn build_uri(&self, base: &str, method: &str) -> String {
         let mut uri = base.to_owned() + "/" + method;
         match self.key {
@@ -73,7 +73,7 @@ impl Service {
         if self.key.is_none() {
             return Err(Error::MethodUnavailable);
         }
-        
+
         Client::new().get(&self.build_uri(URI_BASE, "quote.json"))
             .send()?
             .model::<QuoteResponse>()?
@@ -85,7 +85,7 @@ impl Service {
         if self.key.is_none() {
             return Err(Error::MethodUnavailable);
         }
-        
+
         Client::new().get(&apply_query(
             self.build_uri(URI_BASE, "quote.json"),
             query,
@@ -97,13 +97,13 @@ impl Service {
         if self.key.is_none() {
             return Err(Error::MethodUnavailable);
         }
-        
+
         Client::new().get(&self.build_uri(URI_BASE, "quote/categories.json"))
             .send()?
             .model::<CategoryResponse>()?
             .content()
     }
-    
+
     // PUT: http://quotes.rest/quote.json?quote=<quote>&author=<author>&tags=<tags>
     pub fn add(&mut self) -> Result<()> {
         unimplemented!()
@@ -112,25 +112,25 @@ impl Service {
         //     return Err(Error::MethodUnavailable);
         // }
     }
-    
+
     // GET: http://quotes.rest/quote/image.json
     pub fn image(&mut self) -> Result<Image> {
         if self.key.is_none() {
             return Err(Error::MethodUnavailable);
         }
-        
+
         Client::new().get(&self.build_uri(URI_BASE, "quote/image.json"))
             .send()?
             .model::<ImageResponse>()?
             .content()
     }
-    
+
     // GET: http://quotes.rest/quote/image.json?author=<author>&category=<category>
     pub fn image_query(&mut self, query: &Query) -> Result<Image> {
         if self.key.is_none() {
             return Err(Error::MethodUnavailable);
         }
-        
+
         Client::new().get(&apply_query(
             self.build_uri(URI_BASE, "quote/image.json"),
             query,
@@ -140,7 +140,12 @@ impl Service {
 
 fn apply_query<T: Into<String>>(uri: T, query: &Query) -> String {
     let mut uri = uri.into();
-    if !uri.contains("?") { uri.push('?'); }
+    uri.reserve_exact(query.len() + 1);
+
+    if !uri.contains("?") {
+        uri.push('?');
+    }
+
     uri.push_str(&query.to_string());
     uri
 }
