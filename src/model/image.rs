@@ -8,10 +8,10 @@ pub struct ImagePayload {
 
 #[derive(Debug, Deserialize)]
 pub struct Image {
-    id: String,
-    quote_id: String,
-    permalink: String,
-    download_uri: String,
+    pub id: String,
+    pub quote_id: String,
+    pub permalink: String,
+    pub download_uri: String,
 }
 
 pub type Categories = Vec<String>;
