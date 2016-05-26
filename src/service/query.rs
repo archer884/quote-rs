@@ -38,10 +38,39 @@ impl Query {
 
     pub fn append_to_buffer(&self, buf: &mut String) {
         use std::fmt::Write;
-        if let Some(min) = self.min { write!(buf, "minlength={}", min).ok(); }
-        if let Some(max) = self.max { write!(buf, "&maxlength={}", max).ok(); }
-        if let Some(ref category) = self.category { write!(buf, "&category={}", category).ok(); }
-        if let Some(ref author) = self.author { write!(buf, "&author={}", author).ok(); }
+        
+        let mut has_written = false;
+        
+        if let Some(min) = self.min {
+            write!(buf, "minlength={}", min).ok();
+            has_written = true;
+        }
+        
+        if let Some(max) = self.max {
+            if has_written {
+                buf.push('&');
+            }
+            
+            write!(buf, "maxlength={}", max).ok();
+            has_written = true;
+        }
+        
+        if let Some(ref category) = self.category {
+            if has_written {
+                buf.push('&');
+            }
+            
+            write!(buf, "category={}", category).ok();
+            has_written = true;
+        }
+        
+        if let Some(ref author) = self.author {
+            if has_written {
+                buf.push('&');
+            }
+            
+            write!(buf, "author={}", author).ok();
+        }
     }
 }
 
@@ -62,7 +91,6 @@ impl ToString for Query {
 #[cfg(test)]
 mod tests {
     use super::Query;
-    use serde_json as json;
 
     #[test]
     fn query_produces_expected_results_for_min_and_max() {

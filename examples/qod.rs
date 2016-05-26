@@ -1,6 +1,6 @@
-extern crate quoters;
+extern crate quote_rs;
 
-use quoters::Service;
+use quote_rs::Service;
 
 fn main() {
     let mut service = Service::new();
