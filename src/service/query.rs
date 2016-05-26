@@ -30,10 +30,18 @@ impl Query {
         self.category = Some(category.into());
         self
     }
-    
+
     pub fn with_author<T: Into<String>>(mut self, author: T) -> Query {
         self.author = Some(author.into());
         self
+    }
+
+    pub fn append_to_buffer(&self, buf: &mut String) {
+        use std::fmt::Write;
+        if let Some(min) = self.min { write!(buf, "minlength={}", min).ok(); }
+        if let Some(max) = self.max { write!(buf, "&maxlength={}", max).ok(); }
+        if let Some(ref category) = self.category { write!(buf, "&category={}", category).ok(); }
+        if let Some(ref author) = self.author { write!(buf, "&author={}", author).ok(); }
     }
 }
 
@@ -45,14 +53,9 @@ impl Default for Query {
 
 impl ToString for Query {
     fn to_string(&self) -> String {
-        let mut parameters = Vec::new();
-
-        if let Some(min) = self.min { parameters.push(format!("minlength={}", min)); }
-        if let Some(max) = self.max { parameters.push(format!("maxlength={}", max)); }
-        if let Some(ref category) = self.category { parameters.push(format!("category={}", category)); }
-        if let Some(ref author) = self.author { parameters.push(format!("author={}", author)); }
-
-        parameters.join("&")
+        let mut buf = Vec::new();
+        self.append_to_buffer(&mut buf).ok();
+        buf
     }
 }
 
@@ -81,12 +84,12 @@ mod tests {
         let query = Query::new().with_category("testing").with_min(20).with_max(20);
         assert_eq!("minlength=20&maxlength=20&category=testing", &query.to_string());
     }
-    
+
     #[test]
     fn query_produces_expected_results_for_author() {
         let query = Query::new().with_author("testing");
         assert_eq!("author=testing", &query.to_string());
-        
+
         let query = Query::new().with_min(100).with_max(100).with_author("testing");
         assert_eq!("minlength=100&maxlength=100&author=testing", &query.to_string());
     }
