@@ -106,11 +106,11 @@ impl Service {
     
     // PUT: http://quotes.rest/quote.json?quote=<quote>&author=<author>&tags=<tags>
     pub fn add(&mut self) -> Result<()> {
-        if self.key.is_none() {
-            return Err(Error::MethodUnavailable);
-        }
-        
         unimplemented!()
+
+        // if self.key.is_none() {
+        //     return Err(Error::MethodUnavailable);
+        // }
     }
     
     // GET: http://quotes.rest/quote/image.json
