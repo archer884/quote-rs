@@ -1,6 +1,8 @@
 QuoteRS
 =======
 
+[![Build Status](https://travis-ci.org/archer884/quoters.svg?branch=master)](https://travis-ci.org/archer884/quoters)
+
 > Provides a bare bones wrapper for the quote API at [theysaidso.com][tss]
 
 Right now I provide two API implementations, sort of... I mean, they aren't finished, but the idea is that one of them will provide access to the public API and the other will provide access to the private API. In the long run I may just combine those two and make the API key optional and then return an error from the private methods if you should happen to call one without an API key... Whatever.
