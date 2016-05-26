@@ -9,5 +9,16 @@ extern crate serde;
 mod model;
 mod service;
 
-pub use service::*;
-pub use model::*;
+pub use service::{
+    Error,
+    Query,
+    Result,
+    Service,
+};
+
+pub use model::{
+    Authors,
+    Categories,
+    Image,
+    Quote,
+};
