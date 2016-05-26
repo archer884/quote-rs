@@ -1,6 +1,6 @@
 [package]
 authors = ["J/A <archer884@gmail.com>"]
-name = "quoters"
+name = "quote-rs"
 version = "0.1.0"
 
 [dependencies]
