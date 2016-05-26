@@ -27,13 +27,13 @@ mod tests {
     use model::ApiResponse;
     use model::image::ImagePayload;
     use serde_json as json;
-    
+
     #[test]
     fn deserialize_success() {
         let response = include_str!("../../sample_json/image.json");
         json::from_str::<ApiResponse<ImagePayload>>(response).expect("unable to deserialize");
     }
-    
+
     #[test]
     fn deserialize_failure() {
         let response = include_str!("../../sample_json/categories_bad_response.json");

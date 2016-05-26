@@ -30,10 +30,11 @@ pub struct Quote {
     pub id: String,
 }
 
+
 impl Deserialize for Quote {
     fn deserialize<D: Deserializer>(d: &mut D) -> result::Result<Self, D::Error> {
         use std::error::Error;
-        
+
         #[derive(Deserialize)]
         struct Template {
             pub quote: String,
@@ -46,9 +47,9 @@ impl Deserialize for Quote {
             pub background: String,
             pub id: String,
         }
-        
+
         let template = Template::deserialize(d)?;
-        
+
         Ok(Quote {
             quote: template.quote,
             length: template.length.parse::<i32>().map_err(|e| SerdeError::custom(e.description()))?,
@@ -74,7 +75,7 @@ mod tests {
         let response = include_str!("../../sample_json/qod.json");
         json::from_str::<ApiResponse<QuotePayload>>(response).expect("unable to deserialize");
     }
-    
+
     #[test]
     fn deserialize_failure() {
         let response = include_str!("../../sample_json/qod_bad_sample.json");

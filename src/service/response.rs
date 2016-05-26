@@ -5,7 +5,7 @@ use serde::Deserialize;
 use service::Result;
 
 pub trait Response {
-    fn model<T: Deserialize>(&mut self) -> Result<T>; 
+    fn model<T: Deserialize>(&mut self) -> Result<T>;
 }
 
 impl Response for client::Response {
