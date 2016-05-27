@@ -27,8 +27,8 @@ impl Service {
         }
     }
 
-    fn build_uri(&self, base: &str, method: &str) -> String {
-        let mut uri = base.to_owned() + "/" + method;
+    fn build_uri(&self, method: &str) -> String {
+        let mut uri = URI_BASE.to_owned() + "/" + method;
         match self.key {
             None => uri,
             Some(ref key) => {
@@ -48,14 +48,14 @@ impl Default for Service {
 // Service method implementation
 impl Service {
     pub fn qod(&mut self) -> Result<Quote> {
-        self.client.get(&self.build_uri(URI_BASE, "qod.json"))
+        self.client.get(&self.build_uri("qod.json"))
             .send()?
             .model::<QuoteResponse>()?
             .content()
     }
 
     pub fn qod_categories(&mut self) -> Result<Categories> {
-        self.client.get(&self.build_uri(URI_BASE, "qod/categories.json"))
+        self.client.get(&self.build_uri("qod/categories.json"))
             .send()?
             .model::<CategoryResponse>()?
             .content()
@@ -63,7 +63,7 @@ impl Service {
 
     pub fn qod_for_category(&mut self, category: &str) -> Result<Quote> {
         self.client.get(&apply_query(
-            self.build_uri(URI_BASE, "qod.json"),
+            self.build_uri("qod.json"),
             &Query::new().with_category(category))
         ).send()?.model::<QuoteResponse>()?.content()
     }
@@ -75,7 +75,7 @@ impl Service {
             return Err(Error::MethodUnavailable);
         }
 
-        self.client.get(&self.build_uri(URI_BASE, "quote.json"))
+        self.client.get(&self.build_uri("quote.json"))
             .send()?
             .model::<QuoteResponse>()?
             .content()
@@ -87,7 +87,7 @@ impl Service {
         }
 
         self.client.get(&apply_query(
-            self.build_uri(URI_BASE, "quote.json"),
+            self.build_uri("quote.json"),
             query,
         )).send()?.model::<QuoteResponse>()?.content()
     }
@@ -97,7 +97,7 @@ impl Service {
             return Err(Error::MethodUnavailable);
         }
 
-        self.client.get(&self.build_uri(URI_BASE, "quote/categories.json"))
+        self.client.get(&self.build_uri("quote/categories.json"))
             .send()?
             .model::<CategoryResponse>()?
             .content()
@@ -116,7 +116,7 @@ impl Service {
             return Err(Error::MethodUnavailable);
         }
 
-        self.client.get(&self.build_uri(URI_BASE, "quote/image.json"))
+        self.client.get(&self.build_uri("quote/image.json"))
             .send()?
             .model::<ImageResponse>()?
             .content()
@@ -128,7 +128,7 @@ impl Service {
         }
 
         self.client.get(&apply_query(
-            self.build_uri(URI_BASE, "quote/image.json"),
+            self.build_uri("quote/image.json"),
             query,
         )).send()?.model::<ImageResponse>()?.content()
     }
