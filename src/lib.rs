@@ -2,7 +2,6 @@
 #![plugin(serde_macros)]
 
 extern crate hyper;
-extern crate regex;
 extern crate serde_json;
 extern crate serde;
 

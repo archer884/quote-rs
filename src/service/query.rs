@@ -26,12 +26,12 @@ impl Query {
         self
     }
 
-    pub fn with_category<T: Into<String>>(mut self, category: T) -> Query {
+    pub fn by_category<T: Into<String>>(mut self, category: T) -> Query {
         self.category = Some(category.into());
         self
     }
 
-    pub fn with_author<T: Into<String>>(mut self, author: T) -> Query {
+    pub fn by_author<T: Into<String>>(mut self, author: T) -> Query {
         self.author = Some(author.into());
         self
     }
@@ -106,19 +106,19 @@ mod tests {
 
     #[test]
     fn query_produces_expected_results_for_category() {
-        let query = Query::new().with_category("testing");
+        let query = Query::new().by_category("testing");
         assert_eq!("category=testing", &query.to_string());
 
-        let query = Query::new().with_category("testing").with_min(20).with_max(20);
+        let query = Query::new().by_category("testing").with_min(20).with_max(20);
         assert_eq!("minlength=20&maxlength=20&category=testing", &query.to_string());
     }
 
     #[test]
     fn query_produces_expected_results_for_author() {
-        let query = Query::new().with_author("testing");
+        let query = Query::new().by_author("testing");
         assert_eq!("author=testing", &query.to_string());
 
-        let query = Query::new().with_min(100).with_max(100).with_author("testing");
+        let query = Query::new().with_min(100).with_max(100).by_author("testing");
         assert_eq!("minlength=100&maxlength=100&author=testing", &query.to_string());
     }
 }

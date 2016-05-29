@@ -36,7 +36,7 @@ mod tests {
 
     #[test]
     fn deserialize_failure() {
-        let response = include_str!("../../sample_json/categories_bad_response.json");
+        let response = include_str!("../../sample_json/bad-category.json");
         json::from_str::<ApiResponse<ImagePayload>>(response).expect("unable to deserialize");
     }
 }

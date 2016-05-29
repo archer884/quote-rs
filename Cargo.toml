@@ -4,10 +4,11 @@ name = "quote-rs"
 version = "0.1.0"
 
 [dependencies]
-clippy = "0.0.69"
+clippy = "0.0.70"
 hyper = {version = "0.9.6", default-features = false}
-regex = "0.1.71"
-serde = "0.7.5"
-serde_json = "0.7.0"
+serde = "0.7.6"
+serde_json = "0.7.1"
 serde_macros = "0.7.5"
-chrono = "0.2.22"
+
+[dev-dependencies]
+dotenv = "*"

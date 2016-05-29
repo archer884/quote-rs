@@ -32,7 +32,8 @@ impl Service {
         match self.key {
             None => uri,
             Some(ref key) => {
-                uri.push_str(&format!("api_key={}", key));
+                use std::fmt::Write;
+                write!(uri, "?api_key={}", key).unwrap();
                 uri
             }
         }
@@ -47,71 +48,94 @@ impl Default for Service {
 
 // Service method implementation
 impl Service {
-    pub fn qod(&mut self) -> Result<Quote> {
+    pub fn qod(&self) -> Result<Quote> {
         self.client.get(&self.build_uri("qod.json"))
             .send()?
-            .model::<QuoteResponse>()?
+            .model::<MultiQuoteResponse>()?
             .content()
     }
 
-    pub fn qod_categories(&mut self) -> Result<Categories> {
-        self.client.get(&self.build_uri("qod/categories.json"))
-            .send()?
-            .model::<CategoryResponse>()?
-            .content()
+    #[cfg(test)]
+    pub fn qod_categories(&self) -> Result<Categories> {
+        // These categories are not apt to change, but, if they do,
+        // I'm also not apt to know about it, so I'm going to mark
+        // this as unsupported.
+        Err(Error::MethodNotSupported)
     }
 
-    pub fn qod_for_category(&mut self, category: &str) -> Result<Quote> {
+    pub fn qod_for_category(&self, category: &str) -> Result<Quote> {
         self.client.get(&apply_query(
             self.build_uri("qod.json"),
-            &Query::new().with_category(category))
-        ).send()?.model::<QuoteResponse>()?.content()
+            &Query::new().by_category(category))
+        ).send()?.model::<MultiQuoteResponse>()?.content()
     }
 
     // Everything below here requires an API key
 
-    pub fn random(&mut self) -> Result<Quote> {
+    pub fn random(&self) -> Result<Quote> {
         if self.key.is_none() {
             return Err(Error::MethodUnavailable);
         }
 
         self.client.get(&self.build_uri("quote.json"))
             .send()?
-            .model::<QuoteResponse>()?
+            .model::<SingleQuoteResponse>()?
             .content()
     }
 
-    pub fn query(&mut self, query: &Query) -> Result<Quote> {
+    pub fn by_id(&self, id: &str) -> Result<Quote> {
+        use std::fmt::Write;
+
         if self.key.is_none() {
             return Err(Error::MethodUnavailable);
         }
 
-        self.client.get(&apply_query(
-            self.build_uri("quote.json"),
-            query,
-        )).send()?.model::<QuoteResponse>()?.content()
+        self.client.get(&{
+            let mut uri = self.build_uri("quote.json");
+            write!(uri, "&id={}", id).unwrap();
+            uri
+        }).send()?.model::<SingleQuoteResponse>()?.content()
     }
 
-    pub fn categories(&mut self) -> Result<Categories> {
+    pub fn query(&self, query: &Query) -> Result<Quote> {
         if self.key.is_none() {
             return Err(Error::MethodUnavailable);
         }
 
-        self.client.get(&self.build_uri("quote/categories.json"))
-            .send()?
-            .model::<CategoryResponse>()?
-            .content()
+        let uri = apply_query(self.build_uri("quote.json"), query);
+        
+        println!("{}", uri);
+        
+        self.client.get(&uri).send()?.model::<SingleQuoteResponse>()?.content()
     }
 
-    pub fn add(&mut self) -> Result<()> {
-        unimplemented!()
+    pub fn categories(&self, offset: i32) -> Result<Categories> {
+        use std::fmt::Write;
+        
+        if self.key.is_none() {
+            return Err(Error::MethodUnavailable);
+        }
 
-        // if self.key.is_none() {
-        //     return Err(Error::MethodUnavailable);
-        // }
+        self.client.get(&{
+            let mut uri = self.build_uri("quote/categories.json");
+            write!(uri, "&start={}", offset).unwrap();
+            uri
+        }).send()?.model::<CategoryResponse>()?.content()
     }
 
-    pub fn image(&mut self) -> Result<Image> {
+    #[cfg(test)]
+    pub fn add<T1, T2, T3>(&self, _quote: T1, _author: T2, _tags: &[T3]) -> Result<String>
+        where T1: AsRef<str>,
+              T2: AsRef<str>,
+              T3: AsRef<str>,
+    {
+        // I honestly don't believe this works. The service should return you an ID
+        // so that you can view your quote when you submit it, but instead they're
+        // just sending back nulls.
+        Err(Error::MethodNotSupported)
+    }
+
+    pub fn image(&self) -> Result<Image> {
         if self.key.is_none() {
             return Err(Error::MethodUnavailable);
         }
@@ -122,7 +146,7 @@ impl Service {
             .content()
     }
 
-    pub fn image_query(&mut self, query: &Query) -> Result<Image> {
+    pub fn image_query(&self, query: &Query) -> Result<Image> {
         if self.key.is_none() {
             return Err(Error::MethodUnavailable);
         }
@@ -138,6 +162,8 @@ fn apply_query<T: Into<String>>(uri: T, query: &Query) -> String {
     let mut uri = uri.into();
     if !uri.contains('?') {
         uri.push('?');
+    } else {
+        uri.push('&');
     }
 
     query.append_to_buffer(&mut uri);

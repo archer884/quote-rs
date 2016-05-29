@@ -1,0 +1,17 @@
+{
+    "success": {
+        "total": 7
+    },
+    "contents": {
+        "categories": {
+            "inspire": "Inspiring Quote of the day",
+            "management": "Management Quote of the day",
+            "sports": "Sports Quote of the day",
+            "life": "Quote of the day about life",
+            "funny": "Funny Quote of the day",
+            "love": "Quote of the day about Love",
+            "art": "Art quote of the day "
+        },
+        "copyright": "2013-15 http://theysaidso.com"
+    }
+}

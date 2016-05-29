@@ -18,6 +18,7 @@ pub enum Error {
     Empty,
     IO(Box<error::Error + Send>),
     Json(Box<error::Error + Send>),
+    MethodNotSupported,
     MethodUnavailable,
     NetworkError(Box<error::Error + Send>),
 }
@@ -28,6 +29,7 @@ impl fmt::Display for Error {
             Error::Empty => write!(f, "Empty"),
             Error::IO(ref e) => write!(f, "IO error: {}", e),
             Error::Json(ref e) => write!(f, "Json error: {}", e),
+            Error::MethodNotSupported => write!(f, "Method not supported"),
             Error::MethodUnavailable => write!(f, "Method unavailable"),
             Error::NetworkError(ref e) => write!(f, "Network error: {}", e),
         }
@@ -40,6 +42,7 @@ impl error::Error for Error {
             Error::Empty => "Empty response",
             Error::IO(_) => "IO failure",
             Error::Json(_) => "Json failure",
+            Error::MethodNotSupported => "Method not supported",
             Error::MethodUnavailable => "Method unavailable",
             Error::NetworkError(_) => "Network failure"
         }
