@@ -9,12 +9,13 @@ mod quote;
 pub use model::author::{Authors, AuthorPayload};
 pub use model::category::{Categories, CategoryPayload};
 pub use model::image::{Image, ImagePayload};
-pub use model::quote::{Quote, Quotes, QuotePayload};
+pub use model::quote::{Quote, MultiQuotePayload};
 
 pub type AuthorResponse = ApiResponse<AuthorPayload>;
 pub type CategoryResponse = ApiResponse<CategoryPayload>;
 pub type ImageResponse = ApiResponse<ImagePayload>;
-pub type QuoteResponse = ApiResponse<QuotePayload>;
+pub type SingleQuoteResponse = ApiResponse<Quote>;
+pub type MultiQuoteResponse = ApiResponse<MultiQuotePayload>;
 
 #[derive(Debug, Deserialize)]
 pub struct ApiSuccess {
