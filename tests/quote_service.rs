@@ -73,7 +73,5 @@ fn get_service() -> Service {
     dotenv().ok();
     
     let api_key = env::var("QUOTE_API_KEY").expect("API key must be set");
-    println!("API_KEY: {}", api_key);
-    
     Service::with_key(api_key)
 }

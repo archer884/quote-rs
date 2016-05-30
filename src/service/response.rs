@@ -12,9 +12,6 @@ impl Response for client::Response {
     fn model<T: Deserialize>(&mut self) -> Result<T> {
         let mut buf = String::new();
         self.read_to_string(&mut buf)?;
-        
-        println!("{}", buf);
-        
         Ok(json::from_str(&buf)?)
     }
 }
