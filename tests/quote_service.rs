@@ -6,6 +6,7 @@ use dotenv::dotenv;
 use quote_rs::{Query, Service};
 
 #[test]
+#[ignore]
 fn qod() {
     let response = get_service().qod();
     
@@ -21,6 +22,7 @@ fn qod_for_category() {
 }
 
 #[test]
+#[ignore]
 fn random() {
     let response = get_service().random();
     
@@ -28,6 +30,7 @@ fn random() {
 }
 
 #[test]
+#[ignore]
 fn by_id() {
     let response = get_service().by_id("g3j5nQxVRTka7Sw3khgdRQeF");
     
@@ -35,6 +38,7 @@ fn by_id() {
 }
 
 #[test]
+#[ignore]
 fn query() {
     let response = get_service().query(&Query::new().by_author("Orson Welles"));
     
@@ -42,6 +46,7 @@ fn query() {
 }
 
 #[test]
+#[ignore]
 fn categories() {
     let response = get_service().categories(100);
     
@@ -49,6 +54,7 @@ fn categories() {
 }
 
 #[test]
+#[ignore]
 fn image() {
     let response = get_service().image();
     
@@ -56,6 +62,7 @@ fn image() {
 }
 
 #[test]
+#[ignore]
 fn image_query() {
     let response = get_service().image_query(&Query::new().by_category("inspire"));
     
