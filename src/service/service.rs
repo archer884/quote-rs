@@ -103,9 +103,6 @@ impl Service {
         }
 
         let uri = apply_query(self.build_uri("quote.json"), query);
-        
-        println!("{}", uri);
-        
         self.client.get(&uri).send()?.model::<SingleQuoteResponse>()?.content()
     }
 
