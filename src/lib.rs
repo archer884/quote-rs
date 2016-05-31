@@ -4,6 +4,7 @@
 extern crate hyper;
 extern crate serde_json;
 extern crate serde;
+extern crate url;
 
 mod model;
 mod service;

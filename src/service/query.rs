@@ -35,43 +35,6 @@ impl Query {
         self.author = Some(author.into());
         self
     }
-
-    pub fn append_to_buffer(&self, buf: &mut String) {
-        use std::fmt::Write;
-        
-        let mut has_written = false;
-        
-        if let Some(min) = self.min {
-            write!(buf, "minlength={}", min).ok();
-            has_written = true;
-        }
-        
-        if let Some(max) = self.max {
-            if has_written {
-                buf.push('&');
-            }
-            
-            write!(buf, "maxlength={}", max).ok();
-            has_written = true;
-        }
-        
-        if let Some(ref category) = self.category {
-            if has_written {
-                buf.push('&');
-            }
-            
-            write!(buf, "category={}", category).ok();
-            has_written = true;
-        }
-        
-        if let Some(ref author) = self.author {
-            if has_written {
-                buf.push('&');
-            }
-            
-            write!(buf, "author={}", author).ok();
-        }
-    }
 }
 
 impl Default for Query {
@@ -82,9 +45,41 @@ impl Default for Query {
 
 impl ToString for Query {
     fn to_string(&self) -> String {
-        let mut buf = String::new();
-        self.append_to_buffer(&mut buf);
-        buf
+        fn encode(input: &str) -> String {
+            input.chars().fold(String::new(), |mut buf, c| {
+                match c {
+                    ' ' => buf.push_str("%20"),
+                    '%' => buf.push_str("%25"),
+                    '"' => buf.push_str("%22"),
+                    '#' => buf.push_str("%23"),
+                    '<' => buf.push_str("%3c"),
+                    '>' => buf.push_str("%3e"),
+                    c => buf.push(c),  
+                };
+                
+                buf
+            })
+        }
+        
+        let mut parts = Vec::with_capacity(4);
+        
+        if let Some(min) = self.min {
+            parts.push(format!("minlength={}", min));
+        }
+        
+        if let Some(max) = self.max {
+            parts.push(format!("maxlength={}", max));
+        }
+        
+        if let Some(ref category) = self.category {
+            parts.push(format!("category={}", encode(category)));
+        }
+        
+        if let Some(ref author) = self.author {
+            parts.push(format!("author={}", encode(author)));
+        }
+        
+        parts.join("&")
     }
 }
 

@@ -9,6 +9,7 @@ hyper = {version = "0.9.6", default-features = false}
 serde = "0.7.6"
 serde_json = "0.7.1"
 serde_macros = "0.7.5"
+url = "1.1.1"
 
 [dev-dependencies]
 dotenv = "*"
