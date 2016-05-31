@@ -163,6 +163,6 @@ fn apply_query<T: Into<String>>(uri: T, query: &Query) -> String {
         uri.push('&');
     }
 
-    query.append_to_buffer(&mut uri);
+    uri.push_str(&query.to_string());
     uri
 }
