@@ -3,7 +3,7 @@ use service::{Error, Result};
 
 #[derive(Debug, Deserialize)]
 pub struct ImagePayload {
-    qimage: Image
+    qimage: Image,
 }
 
 #[derive(Debug, Deserialize)]

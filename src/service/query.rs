@@ -56,29 +56,29 @@ impl ToString for Query {
                     '>' => buf.push_str("%3e"),
                     c => buf.push(c),  
                 };
-                
+
                 buf
             })
         }
-        
+
         let mut parts = Vec::with_capacity(4);
-        
+
         if let Some(min) = self.min {
             parts.push(format!("minlength={}", min));
         }
-        
+
         if let Some(max) = self.max {
             parts.push(format!("maxlength={}", max));
         }
-        
+
         if let Some(ref category) = self.category {
             parts.push(format!("category={}", encode(category)));
         }
-        
+
         if let Some(ref author) = self.author {
             parts.push(format!("author={}", encode(author)));
         }
-        
+
         parts.join("&")
     }
 }
@@ -105,7 +105,8 @@ mod tests {
         assert_eq!("category=testing", &query.to_string());
 
         let query = Query::new().by_category("testing").with_min(20).with_max(20);
-        assert_eq!("minlength=20&maxlength=20&category=testing", &query.to_string());
+        assert_eq!("minlength=20&maxlength=20&category=testing",
+                   &query.to_string());
     }
 
     #[test]
@@ -114,6 +115,7 @@ mod tests {
         assert_eq!("author=testing", &query.to_string());
 
         let query = Query::new().with_min(100).with_max(100).by_author("testing");
-        assert_eq!("minlength=100&maxlength=100&author=testing", &query.to_string());
+        assert_eq!("minlength=100&maxlength=100&author=testing",
+                   &query.to_string());
     }
 }

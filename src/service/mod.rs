@@ -5,11 +5,11 @@ use hyper;
 use serde_json as json;
 
 mod query;
+mod quote;
 mod response;
-mod service;
 
 pub use service::query::Query;
-pub use service::service::Service;
+pub use service::quote::Service;
 
 pub type Result<T> = ::std::result::Result<T, Error>;
 
@@ -20,7 +20,7 @@ pub enum Error {
     Json(Box<error::Error + Send>),
     MethodNotSupported,
     MethodUnavailable,
-    NetworkError(Box<error::Error + Send>),
+    Network(Box<error::Error + Send>),
 }
 
 impl fmt::Display for Error {
@@ -31,7 +31,7 @@ impl fmt::Display for Error {
             Error::Json(ref e) => write!(f, "Json error: {}", e),
             Error::MethodNotSupported => write!(f, "Method not supported"),
             Error::MethodUnavailable => write!(f, "Method unavailable"),
-            Error::NetworkError(ref e) => write!(f, "Network error: {}", e),
+            Error::Network(ref e) => write!(f, "Network error: {}", e),
         }
     }
 }
@@ -44,14 +44,14 @@ impl error::Error for Error {
             Error::Json(_) => "Json failure",
             Error::MethodNotSupported => "Method not supported",
             Error::MethodUnavailable => "Method unavailable",
-            Error::NetworkError(_) => "Network failure"
+            Error::Network(_) => "Network failure",
         }
     }
 }
 
 impl From<hyper::Error> for Error {
     fn from(error: hyper::Error) -> Error {
-        Error::NetworkError(box error)
+        Error::Network(box error)
     }
 }
 

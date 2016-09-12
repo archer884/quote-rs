@@ -5,7 +5,7 @@ use service::{Error, Result};
 
 #[derive(Debug, Deserialize)]
 pub struct MultiQuotePayload {
-    pub quotes: Vec<Quote>
+    pub quotes: Vec<Quote>,
 }
 
 impl Content<Quote> for MultiQuoteResponse {
@@ -58,22 +58,34 @@ mod tests {
     #[test]
     fn deserialize_multi_quote_response() {
         let response = include_str!("../../sample_json/multi-quote.json");
-        let quote = json::from_str::<MultiQuoteResponse>(response).expect("unable to deserialize").content().unwrap();
-        
-        assert_eq!(&quote.quote, "Positive anything is better than negative thinking.");
+        let quote = json::from_str::<MultiQuoteResponse>(response)
+            .expect("unable to deserialize")
+            .content()
+            .unwrap();
+
+        assert_eq!(&quote.quote,
+                   "Positive anything is better than negative thinking.");
     }
-    
+
     #[test]
     fn deserialize_single_quote_response() {
         let response = include_str!("../../sample_json/single-quote.json");
-        let quote = json::from_str::<SingleQuoteResponse>(response).expect("unable to deserialize").content().unwrap();
-        
-        assert_eq!(&quote.quote, "Living in the lap of luxury isn't bad, except that you never know when luxury is going to stand up.");
+        let quote = json::from_str::<SingleQuoteResponse>(response)
+            .expect("unable to deserialize")
+            .content()
+            .unwrap();
+
+        assert_eq!(&quote.quote,
+                   "Living in the lap of luxury isn't bad, except that you never know when \
+                    luxury is going to stand up.");
     }
 
     #[test]
     fn deserialize_failure() {
         let response = include_str!("../../sample_json/unauthorized.json");
-        assert!(json::from_str::<MultiQuoteResponse>(response).expect("unable to deserialize").content().is_err());
+        assert!(json::from_str::<MultiQuoteResponse>(response)
+            .expect("unable to deserialize")
+            .content()
+            .is_err());
     }
 }

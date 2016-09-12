@@ -49,7 +49,8 @@ impl Default for Service {
 // Service method implementation
 impl Service {
     pub fn qod(&self) -> Result<Quote> {
-        self.client.get(&self.build_uri("qod.json"))
+        self.client
+            .get(&self.build_uri("qod.json"))
             .send()?
             .model::<MultiQuoteResponse>()?
             .content()
@@ -64,10 +65,12 @@ impl Service {
     }
 
     pub fn qod_for_category(&self, category: &str) -> Result<Quote> {
-        self.client.get(&apply_query(
-            self.build_uri("qod.json"),
-            &Query::new().by_category(category))
-        ).send()?.model::<MultiQuoteResponse>()?.content()
+        self.client
+            .get(&apply_query(self.build_uri("qod.json"),
+                              &Query::new().by_category(category)))
+            .send()?
+            .model::<MultiQuoteResponse>()?
+            .content()
     }
 
     // Everything below here requires an API key
@@ -77,7 +80,8 @@ impl Service {
             return Err(Error::MethodUnavailable);
         }
 
-        self.client.get(&self.build_uri("quote.json"))
+        self.client
+            .get(&self.build_uri("quote.json"))
             .send()?
             .model::<SingleQuoteResponse>()?
             .content()
@@ -90,11 +94,15 @@ impl Service {
             return Err(Error::MethodUnavailable);
         }
 
-        self.client.get(&{
-            let mut uri = self.build_uri("quote.json");
-            write!(uri, "&id={}", id).unwrap();
-            uri
-        }).send()?.model::<SingleQuoteResponse>()?.content()
+        self.client
+            .get(&{
+                let mut uri = self.build_uri("quote.json");
+                write!(uri, "&id={}", id).unwrap();
+                uri
+            })
+            .send()?
+            .model::<SingleQuoteResponse>()?
+            .content()
     }
 
     pub fn query(&self, query: &Query) -> Result<Quote> {
@@ -108,23 +116,27 @@ impl Service {
 
     pub fn categories(&self, offset: i32) -> Result<Categories> {
         use std::fmt::Write;
-        
+
         if self.key.is_none() {
             return Err(Error::MethodUnavailable);
         }
 
-        self.client.get(&{
-            let mut uri = self.build_uri("quote/categories.json");
-            write!(uri, "&start={}", offset).unwrap();
-            uri
-        }).send()?.model::<CategoryResponse>()?.content()
+        self.client
+            .get(&{
+                let mut uri = self.build_uri("quote/categories.json");
+                write!(uri, "&start={}", offset).unwrap();
+                uri
+            })
+            .send()?
+            .model::<CategoryResponse>()?
+            .content()
     }
 
     #[cfg(test)]
     pub fn add<T1, T2, T3>(&self, _quote: T1, _author: T2, _tags: &[T3]) -> Result<String>
         where T1: AsRef<str>,
               T2: AsRef<str>,
-              T3: AsRef<str>,
+              T3: AsRef<str>
     {
         // I honestly don't believe this works. The service should return you an ID
         // so that you can view your quote when you submit it, but instead they're
@@ -137,7 +149,8 @@ impl Service {
             return Err(Error::MethodUnavailable);
         }
 
-        self.client.get(&self.build_uri("quote/image.json"))
+        self.client
+            .get(&self.build_uri("quote/image.json"))
             .send()?
             .model::<ImageResponse>()?
             .content()
@@ -148,10 +161,11 @@ impl Service {
             return Err(Error::MethodUnavailable);
         }
 
-        self.client.get(&apply_query(
-            self.build_uri("quote/image.json"),
-            query,
-        )).send()?.model::<ImageResponse>()?.content()
+        self.client
+            .get(&apply_query(self.build_uri("quote/image.json"), query))
+            .send()?
+            .model::<ImageResponse>()?
+            .content()
     }
 }
 

@@ -3,7 +3,7 @@ use service::{Error, Result};
 
 #[derive(Debug, Deserialize)]
 pub struct AuthorPayload {
-    authors: Vec<String>
+    authors: Vec<String>,
 }
 
 pub type Authors = Vec<String>;
