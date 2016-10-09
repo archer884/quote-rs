@@ -1,11 +1,13 @@
 #![cfg_attr(feature="clippy", feature(plugin))]
 #![cfg_attr(feature="clippy", plugin(clippy))]
-#![feature(box_syntax, custom_derive, plugin, question_mark)]
-#![plugin(serde_macros)]
+#![feature(box_syntax, plugin, proc_macro, question_mark)]
+
+#[macro_use]
+extern crate serde_derive;
 
 extern crate hyper;
-extern crate serde_json;
 extern crate serde;
+extern crate serde_json;
 extern crate url;
 
 mod model;

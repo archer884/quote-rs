@@ -8,7 +8,7 @@ clippy = {version = "*", optional = true}
 hyper = {version = "*", default-features = false}
 serde = "*"
 serde_json = "*"
-serde_macros = "*"
+serde_derive = "*"
 url = "1.1.1"
 
 [dev-dependencies]
