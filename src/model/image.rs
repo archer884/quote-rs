@@ -14,8 +14,6 @@ pub struct Image {
     pub download_uri: String,
 }
 
-pub type Categories = Vec<String>;
-
 impl Content<Image> for ImageResponse {
     fn content(self) -> Result<Image> {
         self.contents.map(|content| content.qimage).ok_or(Error::Empty)

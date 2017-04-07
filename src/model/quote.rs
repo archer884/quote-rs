@@ -30,7 +30,7 @@ pub struct Quote {
 
 
 impl Deserialize for Quote {
-    fn deserialize<D: Deserializer>(d: &mut D) -> result::Result<Self, D::Error> {
+    fn deserialize<D: Deserializer>(d: D) -> result::Result<Self, D::Error> {
         #[derive(Deserialize)]
         struct Template {
             pub quote: String,

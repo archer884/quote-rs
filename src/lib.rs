@@ -1,6 +1,7 @@
-#![cfg_attr(feature="clippy", feature(plugin))]
-#![cfg_attr(feature="clippy", plugin(clippy))]
-#![feature(box_syntax, plugin, proc_macro, question_mark)]
+#![feature(box_syntax, plugin, proc_macro)]
+
+#[cfg(feature = "ssl")]
+extern crate hyper_native_tls;
 
 #[macro_use]
 extern crate serde_derive;
@@ -14,5 +15,4 @@ mod model;
 mod service;
 
 pub use service::{Error, Query, Result, Service};
-
 pub use model::{Authors, Categories, Image, Quote};

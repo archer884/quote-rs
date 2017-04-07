@@ -2,10 +2,14 @@ use hyper::Client;
 use model::*;
 use service::response::Response;
 use service::{Error, Query, Result};
+use std::fmt;
 
+#[cfg(not(feature = "ssl"))]
 static URI_BASE: &'static str = "http://quotes.rest";
 
-#[derive(Debug)]
+#[cfg(feature = "ssl")]
+static URI_BASE: &'static str = "https://quotes.rest";
+
 pub struct Service {
     client: Client,
     key: Option<String>,
@@ -15,14 +19,14 @@ pub struct Service {
 impl Service {
     pub fn new() -> Service {
         Service {
-            client: Client::new(),
+            client: create_client(),
             key: None,
         }
     }
 
     pub fn with_key<T: Into<String>>(key: T) -> Service {
         Service {
-            client: Client::new(),
+            client: create_client(),
             key: Some(key.into()),
         }
     }
@@ -38,6 +42,28 @@ impl Service {
             }
         }
     }
+}
+
+impl fmt::Debug for Service {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Key({:?})", self.key)
+    }
+}
+
+#[cfg(feature = "ssl")]
+fn create_client() -> Client {
+    use hyper::net::HttpsConnector;
+    use hyper_native_tls::NativeTlsClient;
+
+    let ssl = NativeTlsClient::new().unwrap();
+    let connector = HttpsConnector::new(ssl);
+    
+    Client::with_connector(connector)
+}
+
+#[cfg(not(feature = "ssl"))]
+fn create_client() -> Client {
+    Client::new()
 }
 
 impl Default for Service {

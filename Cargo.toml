@@ -1,11 +1,11 @@
 [package]
 authors = ["J/A <archer884@gmail.com>"]
 name = "quote-rs"
-version = "0.1.0"
+version = "0.2.0"
 
 [dependencies]
-clippy = {version = "*", optional = true}
-hyper = {version = "*", default-features = false}
+hyper = "*"
+hyper-native-tls = { version = "*", optional = true }
 serde = "*"
 serde_json = "*"
 serde_derive = "*"
@@ -15,4 +15,5 @@ url = "1.1.1"
 dotenv = "*"
 
 [features]
-default = []
+default = ["ssl"]
+ssl = ["hyper-native-tls"]
