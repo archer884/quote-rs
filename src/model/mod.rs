@@ -1,4 +1,3 @@
-use serde::Deserialize;
 use service::Result;
 
 mod author;
@@ -6,13 +5,11 @@ mod category;
 mod image;
 mod quote;
 
-pub use model::author::{Authors, AuthorPayload};
-pub use model::category::{Categories, CategoryPayload};
+pub use model::author::*;
+pub use model::category::*;
 pub use model::image::{Image, ImagePayload};
 pub use model::quote::{Quote, MultiQuotePayload};
 
-pub type AuthorResponse = ApiResponse<AuthorPayload>;
-pub type CategoryResponse = ApiResponse<CategoryPayload>;
 pub type ImageResponse = ApiResponse<ImagePayload>;
 pub type SingleQuoteResponse = ApiResponse<Quote>;
 pub type MultiQuoteResponse = ApiResponse<MultiQuotePayload>;
@@ -36,7 +33,7 @@ pub struct ApiError {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct ApiResponse<T: Deserialize> {
+pub struct ApiResponse<T> {
     pub success: Option<ApiSuccess>,
     pub error: Option<ApiError>,
     pub reason: Option<String>,
