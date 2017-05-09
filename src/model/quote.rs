@@ -1,6 +1,4 @@
-use std::result;
 use model::{Content, SingleQuoteResponse, MultiQuoteResponse};
-use serde::{Deserialize, Deserializer};
 use service::{Error, Result};
 
 #[derive(Debug, Deserialize)]
@@ -20,34 +18,12 @@ impl Content<Quote> for SingleQuoteResponse {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Quote {
     pub quote: String,
     pub author: String,
     pub background: Option<String>,
     pub id: String,
-}
-
-
-impl Deserialize for Quote {
-    fn deserialize<D: Deserializer>(d: D) -> result::Result<Self, D::Error> {
-        #[derive(Deserialize)]
-        struct Template {
-            pub quote: String,
-            pub author: String,
-            pub background: Option<String>,
-            pub id: String,
-        }
-
-        let template = Template::deserialize(d)?;
-
-        Ok(Quote {
-            quote: template.quote,
-            author: template.author,
-            background: template.background,
-            id: template.id,
-        })
-    }
 }
 
 #[cfg(test)]
